@@ -1,0 +1,72 @@
+.js-dropdown {
+  .js-header {
+    cursor: pointer;
+
+    &.arrow {
+      --_arrow-color: black;
+      --_arrow-gap: 15px;
+      display: flex;
+      align-items: center;
+      gap: var(--_arrow-gap);
+
+      &:after {
+        @include pseudo(block, relative);
+        transform: translateX(-50%) rotate(-45deg);
+        height: 9px;
+        width: 9px;
+        border-left: 3px solid var(--_arrow-color);
+        border-bottom: 3px solid var(--_arrow-color);
+        @include animate(fast);
+        margin-top: -4px;
+        flex-shrink: 0;
+      }
+    }
+
+    .plus {
+      display: none;
+      position: relative;
+      height: 12px;
+      width: 12px;
+
+      @media screen and (max-width: 600px) {
+        display: block;
+      }
+
+      &:before,
+      &:after {
+        @include pseudo(block, absolute);
+        top: 50%;
+        left: 50%;
+        translate: -50% -50%;
+        background-color: $primary-50;
+      }
+
+      &:before {
+        height: 12px;
+        width: 2px;
+        @include animate(fast);
+      }
+
+      &:after {
+        height: 2px;
+        width: 12px;
+      }
+    }
+  }
+
+  &.active {
+    .js-header {
+      &.arrow {
+        &:after {
+          transform: translate(-50%, 50%) rotate(-45deg) scale(-1, -1);
+        }
+      }
+
+      .plus {
+        &:before {
+          rotate: 90deg;
+        }
+      }
+    }
+  }
+}

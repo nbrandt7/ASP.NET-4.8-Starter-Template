@@ -1,0 +1,134 @@
+//* { ❗❗ For General Sitewide Classes Only ❗❗ } *//
+
+@import "mixins";
+
+/*=============================================
+=                 Font Faces                  =
+=============================================*/
+$font-path: "/Content/fonts/";
+
+$font-styles: (
+  Utility: (
+    name: "Utility",
+    font-weights: (
+      BoldCondensed: bold,
+    ),
+  ),
+  Chivo: (
+    name: "Chivo",
+    font-weights: (
+      Medium: 500,
+      BoldItalic: bold,
+      LightItalic: 300,
+      Italic: normal,
+      BlackItalic: 900,
+      ExtraBoldItalic: bold,
+      ExtraBold: bold,
+      Light: 300,
+      Black: 900,
+      Regular: normal,
+      Thin: 100,
+      ThinItalic: 100,
+    ),
+  ),
+);
+
+@include font-faces($font-styles, $font-path);
+
+$font: "Chivo";
+$font-h: "Utility";
+
+/*=============================================
+=        Basic Typography Font Sizes          =
+=============================================}*/
+$headings: (
+  "h1": (
+    "min-font-size": "33px",
+    "max-font-size": "60px",
+  ),
+  "h2": (
+    "min-font-size": "23px",
+    "max-font-size": "25px",
+  ),
+  "h3": (
+    "min-font-size": "20px",
+    "max-font-size": "23px",
+  ),
+  "h4": (
+    "min-font-size": "20px",
+    "max-font-size": "18px",
+  ),
+  "h5": (
+    "min-font-size": "20px",
+    "max-font-size": "18px",
+  ),
+  "h6": (
+    "min-font-size": "",
+    "max-font-size": "",
+  ),
+  "p": (
+    "min-font-size": "15px",
+    "max-font-size": "17px",
+  ),
+);
+
+@each $fontType, $sizes in $headings {
+  $min-font-size: map-get($sizes, "min-font-size");
+  $max-font-size: map-get($sizes, "max-font-size");
+
+  #{$fontType},
+  .#{$fontType} {
+    font-size: $max-font-size;
+    font-size: auto-clamp($min-font-size, $max-font-size);
+  }
+}
+
+/*=============================================
+=         Typography Utility Classes          =
+=============================================*/
+.uppercase {
+  text-transform: uppercase;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.underlined {
+  text-decoration: underline;
+
+  &.graphic {
+    position: relative;
+    text-decoration: none;
+
+    &:after {
+      @include pseudo(block, absolute);
+      background-image: url("/Content/images/icons/underline.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      aspect-ratio: 426 / 10;
+      width: 100%;
+      bottom: 0px;
+      left: calc(50%);
+      transform: translate(-50%, 0%);
+      z-index: -1;
+    }
+  }
+}
+
+p {
+  line-height: 1.6;
+}
+
+a:not([class]) {
+  color: $primary-200;
+  @include animate(fast);
+
+  @include interact {
+    color: lighten($primary-200, 10%);
+  }
+}

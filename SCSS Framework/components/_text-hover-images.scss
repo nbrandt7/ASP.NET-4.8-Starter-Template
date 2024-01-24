@@ -1,0 +1,327 @@
+﻿/*
+ * Visual nav layout for services, materials, etc.
+ */
+.visual-nav-section {
+  z-index: 2;
+  position: relative;
+
+  &:not(.no-center-content) {
+    @media screen and (min-width: 1001px) {
+      @include center-content;
+    }
+  }
+
+  // Remove padding top of adjacent sibiling visual nav section.
+  // Assumes both share the same bg color/section.
+  & + .visual-nav-section {
+    .site-wrapper {
+      padding-top: 0;
+    }
+  }
+
+  .bottom-content,
+  .top-content {
+    @include remove-child-edge-margins;
+
+    & + .visual-nav {
+      margin-top: clamp(25px, 4vw, 50px);
+    }
+  }
+
+  $MQ-hide-content: 1000;
+  $MQ-hide-content-min: $MQ-hide-content + 1;
+
+  .visual-nav {
+    --gap: 15px; // gap size between each item
+    --gap-count: calc(var(--items-per-row) - 1); // number of gaps in a row
+    --gap-total: calc(var(--gap) * var(--gap-count)); // total width of all gaps
+    --gap-offset: calc(
+      var(--gap-total) / var(--items-per-row)
+    ); // gap width to subtract from each item
+    max-width: calc(
+      var(--items-per-row) * var(--item-max-width)
+    ); // max-width of container based on max width of a single item
+    gap: var(--gap);
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    margin-top: clamp(25px, 4vw, 50px);
+
+    @include mq-max-width(1000) {
+      --gap: 10px;
+    }
+
+    @include mq-max-width(400) {
+      --gap: 7px;
+    }
+
+    // Services nav partials - square like shape
+    @import "./text-hover-images~square";
+
+    // Materials nav partial - taller rectangular shape
+    @import "./text-hover-images~rectangle";
+
+    & + .bottom-content {
+      margin-top: clamp(25px, 4vw, 50px);
+    }
+
+    .nav-item {
+      // Do not add property 'overflow: hidden' on this container,
+      // it will prevent aspect-ratio from growing based on the content.
+      color: white;
+      background: black;
+      position: relative;
+      aspect-ratio: var(--item-ratio);
+      width: calc((100% / var(--items-per-row)) - var(--gap-offset));
+      text-decoration: none;
+      line-height: 1.6;
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: clip;
+      border-radius: 3px;
+
+      @mixin hover-state {
+        &:active,
+        &:focus,
+        &:hover {
+          &::after {
+            opacity: 1;
+          }
+
+          .cover-img-bg {
+            filter: blur(4px);
+          }
+
+          .content-contain {
+            transform: translateY(0);
+
+            h3 {
+              @include mq-max-width($MQ-hide-content) {
+                transform: translateY(-0.5em);
+              }
+
+              .inline-arrow {
+                &::after {
+                  transform: translateX(0.25em);
+                }
+              }
+
+              &.has-arrow {
+                &::after {
+                  animation-play-state: paused;
+                  animation: bounce-right 1.5s ease-in-out infinite;
+                  animation-play-state: running;
+                }
+              }
+            }
+
+            .short-desc {
+              visibility: visible;
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      &.span-row {
+        order: 99;
+
+        // Based on all navs wrapping to 1-col at 600px
+        @media screen and (min-width: 601px) {
+          flex-grow: 1;
+
+          @media screen and (min-width: $MQ-hide-content-min) {
+            aspect-ratio: 5 / 1;
+
+            @media screen and (max-width: 1500px) {
+              aspect-ratio: 3.5 / 1;
+            }
+          }
+
+          @media screen and (max-width: $MQ-hide-content) {
+            @include clamp(max-height, 110px, 33vw, 300px);
+          }
+        }
+      }
+
+      &.has-description {
+        @media screen and (min-width: $MQ-hide-content-min) {
+          @include hover-state;
+        }
+      }
+
+      &.has-url {
+        @include hover-state;
+        cursor: pointer;
+
+        .content-contain {
+          h3 {
+            .text-contain {
+              .inline-arrow {
+                display: inline;
+              }
+            }
+          }
+        }
+      }
+
+      &.is-centered {
+        align-items: center;
+
+        .content-contain {
+          display: block;
+          transform: translateY(0);
+
+          h3 {
+            @include mq-max-width($MQ-hide-content) {
+              transform: translateY(-0.5em);
+            }
+          }
+
+          .short-desc {
+            display: block;
+            visibility: visible;
+            opacity: 1;
+          }
+        }
+      }
+
+      .content-contain {
+        --px: 5%;
+        --py: 7%;
+        @include remove-child-edge-margins;
+        @include clamp(padding-top padding-bottom, 20px, var(--py), 50px);
+        @include clamp(padding-left padding-right, 15px, var(--px), 60px);
+        position: relative;
+        z-index: 5;
+        text-align: center;
+        width: 100%;
+        transition: inherit;
+        --height: 100%;
+        transform: translateY(var(--height));
+
+        h3 {
+          --max-size: 35px;
+          --min-size: 22px;
+          line-height: 1.1;
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 0.2em 0.4em;
+          transition: inherit;
+          transition: all 0.4s ease;
+
+          &.has-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            color: white;
+            text-align: center;
+
+            &::after {
+              content: "";
+              background: url(/Content/images/icons/arrowRight.png) no-repeat
+                center / contain;
+              margin-top: 4px;
+              height: 16px;
+              width: 24px;
+              transition: all 0.5s ease;
+              display: block;
+              flex-shrink: 0;
+              filter: drop-shadow(2px 2px 2px black);
+
+              @keyframes bounce-right {
+                0%,
+                30%,
+                60%,
+                100% {
+                  transform: translateX(0);
+                }
+
+                15% {
+                  transform: translateX(10px);
+                }
+
+                45% {
+                  transform: translateX(5px);
+                }
+              }
+            }
+          }
+
+          .nav-icon {
+            flex-shrink: 0;
+            display: inline-block;
+            vertical-align: middle;
+            max-height: calc(min(2em, 55px));
+            max-width: calc(min(4.5em, 170px));
+          }
+
+          .text-contain {
+            .inline-arrow {
+              display: none;
+            }
+
+            small {
+              font-size: 70%;
+            }
+          }
+        }
+
+        .short-desc {
+          font-weight: 500;
+          padding-top: 10px;
+          visibility: hidden;
+          opacity: 0;
+          margin: 0;
+          transition: inherit;
+
+          @media screen and (max-width: $MQ-hide-content) {
+            display: none;
+          }
+        }
+      }
+
+      .cover-img-bg {
+        will-change: filter;
+      }
+
+      // gradient/shadow
+      &::before {
+        @include pseudo(block, absolute);
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        transition: inherit;
+        z-index: 2;
+        $bgcolor: black;
+        background: linear-gradient(
+          0deg,
+          rgba($bgcolor, 0.7) 5%,
+          rgba($bgcolor, 0.4) 30%,
+          rgba($bgcolor, 0) 75%
+        );
+      }
+
+      // Background overlay on hover
+      &::after {
+        @include pseudo(block, absolute);
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        transition: inherit;
+        z-index: 3;
+        background: rgba(black, 0.5);
+        opacity: 0;
+      }
+    }
+  }
+}

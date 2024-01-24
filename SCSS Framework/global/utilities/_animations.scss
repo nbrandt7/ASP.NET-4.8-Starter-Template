@@ -1,0 +1,11 @@
+//* { ❗❗ For Keyframe Animations Only ❗❗ } *//
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0px rgba($accent-200, 0.6);
+  }
+  50%,
+  100% {
+    box-shadow: 0 0 0 25px rgba($accent-100, 0);
+  }
+}

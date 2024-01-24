@@ -1,0 +1,44 @@
+//* { ❗❗ For General Sitewide Classes Only ❗❗ } *//
+
+@import "../global/_mixins";
+
+.split-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  max-width: $site-max-width;
+  margin-inline: auto;
+
+  > * {
+    // Slider fix for swiper js
+    min-width: 0;
+  }
+
+  @for $i from 1 through 40 {
+    &.mq-#{$i*50} {
+      @media screen and (min-width: #{$i*50}px) {
+        > .img-wrap.img-left {
+          order: -1;
+        }
+      }
+
+      @media screen and (max-width: #{$i*50}px) {
+        grid-template-columns: 1fr;
+        gap: 2em;
+
+        > .img-wrap.img-top {
+          order: -1;
+        }
+      }
+    }
+  }
+
+  > .text-wrap {
+    @include wrapper();
+    order: 0;
+  }
+
+  > .img-wrap {
+    position: relative;
+    order: 1;
+  }
+}

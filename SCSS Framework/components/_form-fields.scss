@@ -1,0 +1,143 @@
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+
+  &:disabled {
+    display: none;
+  }
+
+  .form-field {
+    flex: 1;
+    min-width: 170px;
+    display: flex;
+    flex-direction: column;
+
+    label {
+      text-align: left;
+      margin: 0.6em 0.3em;
+    }
+
+    .radio-container {
+      display: flex;
+      gap: 8px;
+      height: 100%;
+      flex-grow: 1;
+      align-items: center;
+
+      input[type="radio"] {
+        display: none;
+
+        &:checked {
+          ~ .radio-item {
+            box-shadow: rgba(71, 59, 74, 0.1) 0px 0px 0px 1px;
+
+            &:before {
+              opacity: 1;
+              scale: 1;
+            }
+          }
+        }
+      }
+
+      .radio-field {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        margin-block: 0;
+        width: 50%;
+        cursor: pointer;
+
+        .radio-item {
+          position: relative;
+          height: 20px;
+          width: auto;
+          aspect-ratio: 1;
+          background-color: white;
+          border-radius: 50%;
+          @include animate(fast);
+
+          &:before {
+            @include pseudo(block, absolute);
+            inset: 50% 50%;
+            translate: -50% -50%;
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            scale: 0;
+            opacity: 0;
+            background-color: $primary-150;
+            transition: inherit;
+          }
+        }
+
+        small {
+          font-size: 14px;
+          margin-inline: unset;
+        }
+      }
+    }
+
+    input,
+    select,
+    textarea {
+      background-color: white;
+      border-radius: 3px;
+      border: 0;
+      padding: auto-clamp(12px, 18px) auto-clamp(8px, 12px);
+      resize: none;
+      width: 100%;
+      @include animate(fast);
+
+      &:focus,
+      &:focus-visible,
+      &:focus-within {
+        outline: 0;
+        box-shadow: rgba($primary-100, 0.1) 0px 0px 0px 1px;
+      }
+    }
+
+    input {
+      &[type="file"] {
+        padding-block: auto-clamp(9px, 15px);
+      }
+    }
+  }
+
+  .error,
+  .error > strong {
+    padding-top: 5px;
+    color: $red-100;
+  }
+}
+
+form[method="post"] {
+  .button[type="submit"] {
+    display: flex;
+    width: fit-content;
+    margin-inline: auto;
+    margin-top: 30px;
+  }
+
+  small.valid-extensions {
+    display: block;
+    margin-inline: unset;
+    text-align: center;
+    max-width: 100%;
+    margin-top: 0.4em !important;
+  }
+
+  .disclaimer {
+    margin-block: 15px 5px;
+  }
+
+  .recaptcha-disclaimer {
+    display: block;
+    font-size: 12px;
+    max-width: 300px;
+    margin-inline: auto;
+    text-align: center;
+  }
+}

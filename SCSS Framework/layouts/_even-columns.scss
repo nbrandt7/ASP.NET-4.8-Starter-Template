@@ -1,0 +1,12 @@
+.even-columns {
+  --_min-col-width: 300px;
+  --_gap: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--_gap);
+
+  > * {
+    flex: 1;
+    min-width: var(--_min-col-width);
+  }
+}

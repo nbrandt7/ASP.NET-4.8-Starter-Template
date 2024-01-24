@@ -1,0 +1,33 @@
+@mixin image-styles($fit: cover) {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: $fit;
+  object-position: center;
+
+  &.left {
+    object-position: left;
+  }
+
+  &.right {
+    object-position: right;
+  }
+
+  &.top {
+    object-position: top;
+  }
+
+  &.bottom {
+    object-position: bottom;
+  }
+}
+
+.cover-img {
+  @include image-styles(cover);
+}
+
+.contain-img {
+  @include image-styles(contain);
+}

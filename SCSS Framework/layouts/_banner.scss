@@ -1,0 +1,5 @@
+.secondary-banner {
+    position: relative;
+    display: flex;
+    @include wrapper();
+}

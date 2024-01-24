@@ -1,0 +1,22 @@
+$border-radius-map: ();
+
+@for $i from 1 through 16 {
+  $class-name: unquote(".br-#{$i}");
+  $radius-value: $i * 1px;
+  $border-radius-map: map-merge(
+    $border-radius-map,
+    (
+      $class-name: $radius-value,
+    )
+  );
+}
+
+@mixin border-radius-classes {
+  @each $class, $value in $border-radius-map {
+    #{$class} {
+      border-radius: $value;
+    }
+  }
+}
+
+@include border-radius-classes;

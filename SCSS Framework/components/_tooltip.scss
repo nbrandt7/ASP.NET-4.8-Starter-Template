@@ -1,0 +1,16 @@
+@import "../global/_mixins";
+
+$padding: 10px 15px;
+$background: white;
+$color: black;
+$border-radius: 3px;
+
+#v-tooltip {
+  position: absolute;
+  background: $background;
+  padding: $padding;
+  color: $color;
+  font-size: 11px;
+  display: none;
+  border-radius: $border-radius;
+}

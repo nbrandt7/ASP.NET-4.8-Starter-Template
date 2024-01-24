@@ -1,0 +1,44 @@
+.faq-dropdown.js-dropdown {
+  position: relative;
+  background-color: $primary-60;
+  margin-bottom: 12px;
+  color: white;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &.active {
+    .js-header {
+      background-color: darken($primary-60, 2%);
+    }
+  }
+
+  .js-header {
+    justify-content: space-between;
+    padding: auto-clamp(20px, 35px) auto-clamp(20px, 30px);
+    @include animate(norm);
+
+    h5 {
+      font-size: auto-clamp(16px, 20px);
+      font-weight: bold;
+    }
+
+    &.arrow {
+      &:after {
+        --_arrow-color: white;
+      }
+    }
+  }
+
+  .js-content {
+    padding: auto-clamp(20px, 35px) auto-clamp(20px, 30px);
+
+    &[aria-hidden="true"] {
+      > * {
+        opacity: 0;
+        @include animate(norm);
+      }
+    }
+  }
+}

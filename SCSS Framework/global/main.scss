@@ -1,0 +1,23 @@
+@import "normalize";
+@import "all";
+@import "../layouts/header";
+@import "../layouts/banner";
+@import "../layouts/footer";
+@import "../layouts/sections";
+@import "../components/button";
+@import "../components/list";
+@import "../components/tooltip";
+
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-size: $base-font-size;
+  font-family: $font;
+  letter-spacing: $letter-spacing;
+  line-height: $line-height;
+  @include scrollbars(10px, $primary-50, $primary-100);
+
+  body {
+    font-family: $font;
+  }
+}

@@ -1,0 +1,202 @@
+//* { ❗❗ For General Sitewide Button Styles Only ❗❗ } *//
+
+@import "../global/mixins";
+
+$easeInOutQuint: ease;
+$timing: 0.3s;
+
+@mixin btn-setup(
+  $bg-color,
+  $bg-color-hover,
+  $color: white,
+  $color-hover: $color,
+  $outlined: false
+) {
+  display: inline-flex;
+  position: relative;
+  justify-content: space-evenly;
+  align-items: center;
+  column-gap: 8px;
+  line-height: 1;
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: ls(40);
+  padding: 14px 20px;
+  min-width: Min(100%, 290px);
+  min-height: 64px;
+  color: $color;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 3px;
+  cursor: pointer;
+  isolation: isolate;
+
+  &.column {
+    flex-direction: column;
+    justify-content: center;
+
+    span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+  }
+
+  @include animate(norm);
+
+  @if $outlined {
+    box-shadow: 0 0 0 2px rgba($bg-color, 0.3) inset;
+    background-color: transparent;
+
+    &::before,
+    &::after {
+      @include pseudo(block, absolute);
+      height: 0;
+      width: 2px;
+      transition: height $timing $timing $easeInOutQuint,
+        width $timing $easeInOutQuint;
+    }
+
+    &::before {
+      border-radius: 3px;
+      box-shadow: 2px 2px 0 rgba($bg-color-hover, 1) inset;
+      bottom: 0;
+      left: 0;
+    }
+
+    &::after {
+      border-radius: 3px;
+      box-shadow: -2px -2px 0 rgba($bg-color-hover, 1) inset;
+      top: 0;
+      right: 0;
+    }
+  } @else {
+    border: none;
+
+    &:before {
+      @include pseudo(block, absolute);
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      background-color: $bg-color;
+      border-radius: 3px;
+      z-index: -1;
+      box-shadow: 0px -50px 70px -50px rgba(0, 0, 0, 0.55) inset;
+      @include animate(norm);
+    }
+
+    &:after {
+      @include pseudo(block, absolute);
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      border-radius: 3px;
+      background-color: $bg-color-hover;
+      background-image: url("/Content/images/icons/button-hover-bg.jpg");
+      filter: grayscale(10%);
+      background-blend-mode: multiply;
+      background-size: contain;
+      z-index: -2;
+      @include animate(norm);
+    }
+
+    img.arrow {
+      width: 20px;
+      height: 15px;
+      position: absolute;
+      right: 25px;
+      @include animate(fast);
+    }
+  }
+
+  &:hover,
+  &:focus {
+    @include btn-hover {
+      @if $outlined {
+        &::before,
+        &::after {
+          height: 100%;
+          width: 100%;
+          transition: height $timing $easeInOutQuint,
+            width $timing $timing $easeInOutQuint;
+        }
+      } @else {
+        box-shadow: none;
+        color: $color-hover;
+
+        &:before {
+          opacity: 0;
+        }
+
+        img.arrow {
+          transform: translateX(6px);
+        }
+      }
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    filter: grayscale(1);
+    opacity: 1;
+
+    img.arrow {
+      opacity: 0;
+    }
+  }
+}
+
+@mixin btn-hover() {
+  @media (hover: hover) {
+    &:not(:disabled) {
+      &:focus-visible,
+      &:hover {
+        @content;
+      }
+    }
+  }
+}
+
+// Button Styles
+//** Usage:
+//* @include btn-setup(bg-color or border-color, bg-hover-color or border-hover-color, color, hover color, outline: true or false);
+//**
+.button {
+  &.primary {
+    @include btn-setup($accent-200, $accent-200, black, black);
+  }
+
+  &.outlined {
+    @include btn-setup($primary-100, white, $neutral-100, white, true);
+  }
+
+  &.accent {
+    @include btn-setup(
+      $primary-200,
+      $primary-200,
+      $primary-200,
+      $primary-200,
+      true
+    );
+  }
+}
+
+.arrow-link {
+  position: relative;
+
+  &:after {
+    --_color: currentColor;
+    @include pseudo(block, absolute);
+    transform: translateY(-50%) rotate(-135deg);
+    left: unset;
+    top: 55%;
+    right: 0;
+    height: 11px;
+    width: 11px;
+    border-bottom: 2px solid var(--_color);
+    @include animate(fast);
+  }
+}

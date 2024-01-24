@@ -1,0 +1,11 @@
+.flow {
+  @each $selector, $value in $margin-bottom-spacing-values {
+    #{$selector} {
+      margin-block: 0px $value;
+    }
+  }
+
+  *:not(div):not(section):last-child {
+    margin-block: 0;
+  }
+}

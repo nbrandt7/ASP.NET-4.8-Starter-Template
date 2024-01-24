@@ -1,0 +1,101 @@
+﻿/*
+ * Services nav layout styling. Taller rectangular layout.
+ * imported in '_visualNavImages.scss'.
+ */
+
+@mixin col-layout($cols) {
+	@if ($cols ==4) {
+		--heading-scale-factor: 0.37;
+		--items-per-row: 4; // number of items per row
+	} @else if ($cols ==3) {
+		--heading-scale-factor: 0.55;
+		--items-per-row: 3;
+
+		@include mq-max-width(1200) {
+			.short-desc {
+				font-size: 15px;
+			}
+		}
+	} @else if ($cols ==2) {
+		--heading-scale-factor: 0.8;
+		--items-per-row: 2;
+	} @else if ($cols ==1) {
+		--heading-scale-factor: 1.3;
+		--items-per-row: 1;
+	}
+}
+
+&.materials-nav {
+	--item-max-width: 550px; // Max width of single nav item
+	--item-ratio: 0.85 / 1; // Nav item ratio
+
+	@include mq-max-width($MQ-hide-content) {
+		--item-ratio: 1.3 / 1;
+	}
+
+	@include mq-max-width(800) {
+		@include col-layout(2);
+	}
+
+	@include mq-max-width(600) {
+		@include col-layout(1);
+		--item-ratio: 1.5 / 1;
+	}
+
+	&.col-max-4 {
+		@include mq-min-width(801) {
+			@include col-layout(4);
+
+			@include mq-max-min-width(
+				(
+					1500: 1201,
+					$MQ-hide-content: 0,
+				)
+			) {
+				--item-ratio: 1.2 / 1;
+
+				&.single-row {
+					@include col-layout(2);
+				}
+
+				&.multi-row {
+					@include col-layout(3);
+				}
+			}
+
+			@include mq-max-min-width(
+				(
+					1500: $MQ-hide-content-min,
+				)
+			) {
+				@include col-layout(2);
+				--item-ratio: 1.1 / 1;
+			}
+		}
+	}
+
+	&.col-max-3 {
+		@include mq-min-width(801) {
+			@include col-layout(3);
+		}
+	}
+
+	&.col-max-2 {
+		@include mq-min-width(801) {
+			@include col-layout(2);
+		}
+	}
+
+	&.col-max-1 {
+		@include col-layout(1);
+		--gap: 0px;
+	}
+
+	.nav-item {
+		.content-contain {
+			@include mq-min-width($MQ-hide-content-min) {
+				--py: 10%;
+			}
+		}
+	}
+}

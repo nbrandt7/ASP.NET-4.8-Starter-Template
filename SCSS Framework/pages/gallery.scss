@@ -1,0 +1,33 @@
+@import "../global/all";
+@import "../vendors/photoswipe";
+@import "../components/pagination";
+
+.gallery-image-grid {
+  --_col-count: 4;
+  --_col-gap: 5px; // Multiply by 2
+  background-color: black;
+
+  @media screen and (max-width: 1550px) {
+    --_col-count: 3;
+    --_col-gap: 2.5px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    --_col-count: 2;
+  }
+
+  .grid-sizer {
+    width: calc(100% / var(--_col-count));
+  }
+
+  .gallery-image {
+    padding: var(--_col-gap);
+    width: calc(100% / var(--_col-count));
+    text-align: center;
+
+    img {
+      width: 100%;
+      display: block;
+    }
+  }
+}

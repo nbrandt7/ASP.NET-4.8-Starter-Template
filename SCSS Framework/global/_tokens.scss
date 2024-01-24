@@ -1,0 +1,100 @@
+//* { ❗❗ SCSS/CSS Variables Only ❗❗ } *//
+
+$site-max-width: 2560px;
+$site-min-width: 350px;
+$base-font-size: 16px;
+$nav-mobile-mq-max: 1450px;
+$nav-mobile-mq-min: 1451px;
+$line-height: 1.2;
+
+// Global site spacing - should use rem to scale
+$margin-bottom-spacing-values: (
+  h1: 0.3em,
+  h2: 0.55em,
+  h3: 0.5em,
+  h4: 0.4em,
+  h5: 1em,
+  p: 2.35em,
+  ul: 2em,
+  a: 0em,
+  "wrapper > img": 1.5em,
+  ".btn-container": 2.3em,
+  ".btn-container .button": 0.3em,
+  ".button": 2.3em,
+  ".big-numbers li": 1.25em,
+  ".big-numbers": 3em,
+  "h2:has(+h3)": 0.2em,
+  "p:has(+p)": 1em,
+  "ul:has(+p)": 1em,
+);
+
+// Site Wrapper padding inline
+$padding-inline: (
+  // Initial site inline padding
+  initial: 5vw,
+  // Media queries and change of site inline padding globally
+  1000: 6vw,
+  500: 7vw,
+  420: 5vw
+);
+
+// Section wrapper padding block
+$padding-block: (
+  100: 10px 10px,
+  200: 20px 20px,
+  300: 30px 30px,
+  400: 40px 40px,
+  500: 50px 50px,
+  600: 60px 60px,
+  800: 80px 80px,
+  900: clamp(3.75rem, calc(3.453rem + 1.357vw), 5.625rem)
+    clamp(3.75rem, calc(3.453rem + 1.357vw), 5.625rem),
+  1000: 100px 100px,
+);
+
+//Transition Timings
+$timings: (
+  slow: 0.8s,
+  norm: 0.5s,
+  fast: 0.3s,
+);
+
+$timing-function: linear;
+
+:root {
+  // Header height values
+  --specials-banner-height: 30px;
+  --upper-nav-height: 45px;
+  --main-nav-height: 110px;
+  --header-height: calc(
+    var(--upper-nav-height) + var(--main-nav-height) +
+      var(--specials-banner-height)
+  );
+
+  // Scrolling values for header. Separate variables so jump links can use values for offset calculation,
+  // top position of sticky elements, etc.
+  --specials-banner-height-scrolling: 0px;
+  --upper-nav-height-scrolling: 0px;
+  --main-nav-height-scrolling: 110px;
+  --header-height-scrolling: calc(
+    var(--upper-nav-height-scrolling) + var(--main-nav-height-scrolling) +
+      var(--specials-banner-height-scrolling)
+  );
+
+  --nav-mobile-mq: $nav-mobile-mq-max; // Used in JS
+  --toggle-plus-color: #{red}; // override on element after invoking mixin if needed.
+
+  @media screen and (max-width: 1500px) {
+    --main-nav-height: 90px;
+  }
+
+  @media screen and (max-width: $nav-mobile-mq-max) {
+    --specials-banner-height: 35px;
+    --upper-nav-height: 40px;
+    --main-nav-height-scrolling: 90px;
+  }
+
+  @media screen and (max-width: 1000px) {
+    --upper-nav-height: 0px;
+  }
+}

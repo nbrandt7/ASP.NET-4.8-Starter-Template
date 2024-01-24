@@ -1,0 +1,19 @@
+@import "../tokens";
+
+@mixin font-size-classes {
+  @each $size, $value in $font-sizes {
+    .fs-#{$size} {
+      font-size: $value;
+    }
+  }
+}
+
+$font-sizes: map-merge(
+  (
+    "default": map-get($font-sizes, "base"),
+  ),
+  $font-sizes
+) !global;
+@forward "font-styles";
+
+@include font-size-classes;

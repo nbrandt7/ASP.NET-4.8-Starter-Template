@@ -1,0 +1,122 @@
+@import "../vendors/swiper-bundle";
+
+/*
+ * Add to or override default swiper styles
+ */
+
+.swiper-outer-contain {
+  gap: auto-clamp(5px, 25px);
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  .swiper-btn-prev,
+  .swiper-btn-next {
+    width: auto-clamp(26px, 60px);
+    cursor: pointer;
+    flex-shrink: 0;
+    display: none;
+    position: relative;
+    align-items: center; // center arrows
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      opacity: 0.5;
+    }
+
+    &.active {
+      display: flex;
+    }
+
+    &.light {
+      border-color: white;
+    }
+
+    &.swiper-button-lock {
+      display: none;
+    }
+
+    // arrow
+    &::before {
+      content: "";
+      height: auto-clamp(25px, 50px);
+      width: auto-clamp(25px, 50px);
+      border-width: auto-clamp(4px, 8px);
+      display: block;
+      border-color: #b2b2b2;
+      border-top-style: solid;
+      transition: all 0.3s ease;
+      border-left-style: solid;
+    }
+
+    // Larger hit box
+    &::after {
+      position: absolute;
+      inset: 50% 50%;
+      translate: -50% -50%;
+      height: 200%;
+      width: 125%;
+      content: "";
+      display: block;
+    }
+  }
+
+  .swiper-btn-prev {
+    &::before {
+      transform: translateX(25%) rotate(-45deg);
+    }
+  }
+
+  .swiper-btn-next {
+    &::before {
+      transform: translateX(-25%) rotate(135deg);
+    }
+  }
+
+  .swiper {
+    width: 100%;
+
+    &:not(.swiper-initialized) {
+      justify-content: center;
+
+      .swiper-scrollbar {
+        display: none;
+      }
+    }
+
+    &.swiper-initialized {
+      &.has-scrollbar {
+        padding-bottom: 30px;
+      }
+    }
+
+    .swiper-wrapper {
+      max-width: max-content;
+
+      .swiper-slide {
+        height: auto;
+        box-sizing: border-box;
+      }
+    }
+
+    .swiper-cards {
+      overflow: visible;
+
+      .swiper-slide {
+        transform-origin: center bottom;
+        backface-visibility: hidden;
+      }
+    }
+
+    .swiper-button-prev,
+    .swiper-button-next {
+      display: none;
+    }
+
+    .swiper-scrollbar {
+      left: 2%;
+      width: 96%;
+    }
+  }
+}

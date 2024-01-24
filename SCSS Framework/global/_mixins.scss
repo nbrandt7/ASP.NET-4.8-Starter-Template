@@ -1,0 +1,350 @@
+//* { ❗❗ For Mixins Only ❗❗ } *//
+/// Wrapper mixin for styling common container properties.
+/// @param {String} $display - Display property value.
+/// @example
+///   @include wrapper;
+///   @include wrapper(flex);
+@mixin wrapper($display: block) {
+  margin: 0 auto;
+  max-width: $site-max-width;
+  width: 100%;
+  position: relative;
+  display: $display;
+  overflow-x: clip;
+
+  @each $breakpoint, $padding in $padding-inline {
+    @if $breakpoint == initial {
+      // Apply initial padding
+      padding-inline: $padding;
+    } @else {
+      // Apply media query
+      @media (max-width: #{$breakpoint}px) {
+        padding-inline: $padding;
+      }
+    }
+  }
+}
+
+/// Padding Block mixin.
+/// Generates padding classes based on the provided map.
+/// @param {Map} $map - Map of padding sizes with keys as class names and values as padding values.
+/// @example
+///   @include generate-padding-classes((
+///     small: 5px,
+///     medium: 10px,
+///     large: 15px
+///   ));
+@mixin generate-padding-classes($map) {
+  @each $key, $value in $map {
+    .padding-#{$key} {
+      padding-block: $value;
+    }
+  }
+}
+
+/// Calculate from pixels to viewport width (vw).
+/// @param {Number} $size - Size in pixels.
+/// @return {Number} - Size in vw.
+/// @example
+///   $width: vwCalc(200);
+@function vwCalc($size) {
+  $vw: $size / 20px;
+  @return $vw * 1vw;
+}
+
+/// Convert value from pixels to rem units.
+/// @param {Number} $value - Value in pixels.
+/// @param {Number} $base-font-size - Base font size in pixels.
+/// @return {Number} - Value in rem.
+/// @example
+///   margin-top: to-rem(20, 16);
+@function to-rem($value, $base-font-size) {
+  @return $value / $base-font-size;
+}
+
+/// Auto calculator clamp based on min and max sizes in pixels.
+/// @param {Number} $min-value - Minimum value in pixels.
+/// @param {Number} $max-value - Maximum value in pixels.
+/// @return {String} - CSS clamp function.
+/// @example
+///   font-size: auto-clamp(16, 24);
+@function auto-clamp($min-value, $max-value) {
+  $min-value: to-rem($min-value, $base-font-size);
+  $max-value: to-rem($max-value, $base-font-size);
+  $min-view: to-rem($site-min-width, $base-font-size);
+  $max-view: to-rem($site-max-width, $base-font-size);
+
+  $range: ($max-value - $min-value) / ($max-view - $min-view);
+  $offset: $min-value - $min-view * $range;
+  $range: $range * 100;
+
+  @return unquote(
+    "clamp(#{$min-value}rem, #{$offset}rem + #{$range}vw, #{$max-value}rem)"
+  );
+}
+
+/// Letter spacing function.
+/// Converts letter spacing from Photoshop's units to em units.
+/// @param {Number} $value - Letter spacing value in Photoshop units.
+/// @return {Number} - Letter spacing value in em units.
+/// @example
+///   letter-spacing: ls(100);
+@function ls($value) {
+  @return $value / 1000 * 1em;
+}
+
+/// Font faces mixin.
+/// Generates @font-face rules based on the provided font styles and path.
+/// @param {Map} $font-styles - Map of font styles.
+/// @param {String} $font-path - Path to the font files.
+/// @example
+///   @include font-faces((
+///     Roboto: (
+///       name: 'Roboto',
+///       font-weights: (normal: 400, bold: 700)
+///     )
+///   ), 'fonts/');
+@mixin font-faces($font-styles, $font-path) {
+  @each $font-name, $font-data in $font-styles {
+    $font-family: map-get($font-data, name);
+    $font-weights: map-get($font-data, font-weights);
+
+    @each $style, $weight in $font-weights {
+      $font-face: unquote("#{$font-name}-#{$style}");
+      $font-style: if($weight == "italic", "italic", "normal");
+
+      @font-face {
+        font-family: "#{$font-family}";
+        font-weight: $weight;
+        font-style: $font-style;
+        font-display: swap;
+
+        // Create an empty src property to add the different formats
+        src: "";
+      }
+
+      $font-formats: (
+        eot: "embedded-opentype",
+        woff2: "woff2",
+        woff: "woff",
+        ttf: "truetype",
+        svg: "svg",
+      );
+
+      @each $format, $format-name in $font-formats {
+        $font-file: "#{$font-path}#{$font-face}.#{$format}";
+
+        // Check if the font file exists before adding it to src
+        @if file-exists($font-file) {
+          // Append the format to the src property
+          @at-root {
+            @font-face {
+              font-family: "#{$font-family}";
+              font-weight: $weight;
+              font-style: $font-style;
+              font-display: swap;
+              font-smoothing: antialiased;
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+              src: append(
+                src,
+                unquote('url("#{$font-file}") format("#{$format-name}"), '),
+                comma
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+//Webp background image support
+@mixin bg-set($image-url, $fallback-url: "") {
+  background-image: url(#{$image-url}); // Fallback image in another format (e.g., JPEG)
+
+  @if $fallback-url != "" {
+    @supports (background-image: image-set(url(#{$fallback-url}) 1)) {
+      background-image: image-set(
+        url(#{$image-url}) 1,
+        url(#{$fallback-url}) 1
+      );
+    }
+  }
+}
+
+/// Hover/Focus Mixin
+/// Applies styles only when the screen width is greater than or equal to $mq.
+/// @param {Number} $mq - Minimum screen width to apply styles.
+/// @example
+///   @include interact(768) {
+///     color: blue;
+///   }
+@mixin interact($mq: $nav-mobile-mq-min) {
+  @media screen and (min-width: $mq) {
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      @content;
+    }
+  }
+}
+
+/// Provides a max-width and min-width media query with support for multiple ranges.
+/// Accepts Map of viewport ranges in pixels as arguments and applies the @content rules inside the media query.
+/// If value of min-width is 0, it will default to a max-width only media query.
+/// @param {Map} $viewport-ranges - Map of viewport ranges in pixels to apply content between min and max width media queries.
+/// @example
+/// 	@include mq-max-min-width((1200 : 801)) {
+/// 		flex-direction: column;
+/// 	}
+/// 	@include mq-max-min-width((800 : 641, 500: 0)) {
+/// 		font-size: 18px;
+/// 	}
+@mixin mq-max-min-width($viewport-ranges) {
+  @each $max-width, $min-width in $viewport-ranges {
+    @if $min-width ==0 {
+      @media screen and (max-width: #{$max-width}px) {
+        @content;
+      }
+    } @else {
+      @media screen and (max-width: #{$max-width}px) and (min-width: #{$min-width}px) {
+        @content;
+      }
+    }
+  }
+}
+
+/// Basic properties of a pseudo element mixin.
+/// @param {String} $display - Display property value for the pseudo element.
+/// @param {String} $pos - Position property value for the pseudo element.
+/// @param {String} $content - Content property value for the pseudo element.
+/// @example
+///   @include pseudo; // Defaults to block, absolute position, and empty content.
+///   @include pseudo(inline, relative, "Hello");
+@mixin pseudo($display: block, $pos: absolute, $content: "") {
+  content: $content;
+  display: $display;
+  position: $pos;
+}
+
+/// Fill a parent with an absolutely positioned element mixin.
+/// Sets position to absolute and dimensions to cover the entire parent.
+/// @example
+///   @include absolute-fill;
+@mixin absolute-fill() {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/// Center an absolutely positioned element mixin.
+/// Sets position to absolute and uses inset and translate properties for centering.
+/// @example
+///   @include absolute-center;
+@mixin absolute-center() {
+  position: absolute;
+  inset: 50% 50%;
+  translate: -50% -50%;
+}
+
+//For spacing apart icons/text
+@mixin icon-text($gap, $justify: center) {
+  display: flex;
+  align-items: center;
+  justify-content: $justify;
+  gap: $gap;
+}
+
+@mixin cluster($gap, $justify: flex-start, $align: flex-start) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+  gap: $gap;
+}
+
+/// Plus sign CSS for content-toggle mixin below.
+/// @param {String} $dir - Direction to place the plus sign (top, right, bottom, left).
+/// @example
+///   @include plus-sign(top);
+@mixin plus-sign($dir) {
+  position: relative;
+  padding-#{$dir}: $plus-sign-offset;
+
+  &::before,
+  &::after {
+    content: "";
+    @include absolute-center-y;
+    #{$dir}: 0;
+    background: var(--toggle-plus-color);
+    width: 12px;
+    height: 4px;
+    transition: all 0.5s ease;
+    display: block;
+    z-index: 2;
+  }
+
+  &::before {
+    transform: translateY(-50%) rotate(90deg);
+  }
+}
+
+/// Animation speed mixin.
+/// Applies transition properties based on speed ('fast', 'norm', 'slow').
+/// Default timing properties are changed in _tokens.scss file.
+/// @param {String} $speed - Speed of the animation.
+/// @param {Number} $delay - Delay before the transition starts.
+/// @param {String} $timing - Timing function for the transition.
+/// @example
+///   @include animate(fast);
+///   @include animate(fast, 0.3s, cubic-bezier(0, 0, 0, 1));
+@mixin animate($speed, $delay: 0.05s, $timing: $timing-function) {
+  @if $speed == "fast" {
+    // 0.2 seconds
+    transition: all map-get($timings, "fast") $timing-function;
+    transition-delay: $delay;
+  } @else if $speed == "norm" {
+    // 0.5 seconds
+    transition: all map-get($timings, "norm") $timing-function;
+    transition-delay: $delay;
+  } @else if $speed == "slow" {
+    // 2 seconds
+    transition: all map-get($timings, "slow") $timing-function;
+    transition-delay: $delay;
+  }
+}
+
+/// Customize scrollbar styling for Chrome, Edge, and Firefox.
+/// @param {Number} $size - Width/height of the scrollbar.
+/// @param {Color} $foreground-color - Color of the scrollbar thumb.
+/// @param {Color} $background-color - Color of the scrollbar track.
+/// @example
+///   @include scrollbars(10px, #333, #ddd);
+@mixin scrollbars(
+  $size,
+  $foreground-color,
+  $background-color: mix($foreground-color, white, 50%)
+) {
+  // For Google Chrome
+  &::-webkit-scrollbar {
+    width: $size;
+    height: $size;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $foreground-color;
+
+    &:hover {
+      background: darken($foreground-color, 10%);
+    }
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $background-color;
+  }
+
+  scrollbar-color: $foreground-color $background-color;
+  scrollbar-width: thin;
+}

@@ -1,0 +1,19 @@
+@import "../tokens";
+
+@mixin font-weight-classes {
+  @each $weight, $value in $font-weights {
+    .fw-#{$weight} {
+      font-weight: $value;
+    }
+  }
+}
+
+$font-weights: map-merge(
+  (
+    "default": map-get($font-weights, "regular"),
+  ),
+  $font-weights
+) !global;
+@forward "font-styles";
+
+@include font-weight-classes;
