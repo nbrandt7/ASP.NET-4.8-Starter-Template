@@ -71,4 +71,3 @@ Html.RenderPartial("~/Views/Page/Partials/ContentSection.ascx",
 		</div>
 	</section>
 <% } %>
-<% } %>
