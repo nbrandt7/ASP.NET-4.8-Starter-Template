@@ -1,16 +1,78 @@
 @import "../global/_mixins";
 
-$padding: 10px 15px;
-$background: white;
-$color: black;
-$border-radius: 3px;
+.tooltip {
+  position: relative;
+  cursor: help;
+  z-index: 9;
+  width: 1em;
+  height: 1em;
+  min-width: 18px;
+  min-height: 18px;
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  color: #cacaca;
 
-#v-tooltip {
-  position: absolute;
-  background: $background;
-  padding: $padding;
-  color: $color;
-  font-size: 11px;
-  display: none;
-  border-radius: $border-radius;
+  // Larger Hit box for tooltip icon
+  &::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 150%;
+    height: 150%;
+    display: block;
+    background: transparent;
+  }
+
+  &:active,
+  &:hover,
+  &:focus {
+    .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  & > .icon {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tooltip-text {
+    --offset-x: 0px; // used in JS
+    position: absolute;
+    left: 50%;
+    transform: translateX(calc(-50% + var(--offset-x)));
+    font-size: 14px;
+    display: block;
+    bottom: 100%;
+    max-width: max-content;
+    width: 500px;
+    max-width: 99vw;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 9;
+    color: white;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: center;
+    overflow: hidden;
+    padding: 10px 15px;
+    white-space: normal;
+
+    &.pos-bottom {
+      bottom: unset;
+      top: 100%;
+    }
+
+    .tooltip-inner {
+      background: #111;
+      border-radius: 5px;
+      padding: 10px 15px;
+      display: block;
+    }
+  }
 }
