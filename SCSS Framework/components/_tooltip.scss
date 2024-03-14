@@ -1,5 +1,9 @@
 @import "../global/_mixins";
 
+/*
+ * Tooltip styles
+ */
+
 .tooltip {
   position: relative;
   cursor: help;
@@ -11,15 +15,12 @@
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
-  color: #cacaca;
+  color: $primary;
 
   // Larger Hit box for tooltip icon
   &::before {
     content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    @include absolute-center-xy;
     width: 150%;
     height: 150%;
     display: block;
@@ -50,7 +51,7 @@
     bottom: 100%;
     max-width: max-content;
     width: 500px;
-    max-width: 99vw;
+    max-width: 90vw;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;
